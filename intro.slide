@@ -10,7 +10,7 @@ https://github.com/ardanlabs/gotraining
 
 * Today's Agenda
 
-Ask questions, interrupt, interject.
+This is a brain dump. Ask questions, interrupt, interject.
 
 - What/Why is Go
 - How you do Go
@@ -56,7 +56,7 @@ Resolve common criticisms of other languages while maintaining their positive ch
 * Some unique things
 - Built-in concurrency primitives
 - Composition over inheritance
-- Pointers, but no pointer arithmatic
+- Pointers, but no pointer arithmatic (by default)
 - Unique handling of packages and dependencies
 - Statically linked native binaries (no external dependencies)
 
@@ -78,6 +78,7 @@ Some common features (ex: generics, inheritance) in object-oriented languages ar
 
 Some features are omitted or modified to prevent particular behaviors (ex: maps, asserts, exceptions)
 
+Go wants to tell you how to code.
 
 * Hello Go!
 
@@ -121,7 +122,7 @@ Structs =/= Objects
 
 Structs == simple DTOs (sort of)
 
-A way of expressing groups of data
+A way of grouping related data
 
 * Structs
 
