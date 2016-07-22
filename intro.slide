@@ -1,0 +1,380 @@
+A Brief Introduction to Golang
+by dummies, for dummies
+
+Adam Schaub
+
+https://tour.golang.org
+
+http://github.com/adamschaub/golang-intro
+https://github.com/ardanlabs/gotraining
+
+* Today's Agenda
+
+Ask questions, interrupt, interject.
+
+- What/Why is Go
+- How you do Go
+
+A break...
+
+- More about how you do Go
+- Useful resources and stuff
+
+.image intro/img/gopherbw.png _ 300
+
+* Brief History and Motivation
+
+Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.
+
+Developed as an experiment by three Google engineers in 2007:
+
+	"... sometimes you can get more ... by taking things away... 
+	start from scratch and rethink everything" - Rob Pike (Go author)
+
+No major systems language has emerged in over a decade, but over that time the computing landscape has changed tremendously.
+
+Current type systems are cumbersome.
+
+Computers are getting faster. Software development isn't.
+
+Resolve common criticisms of other languages while maintaining their positive characteristics.
+
+* The Go design...
+
+- Expressive but lightweight type system
+- Scalable to large systems
+- Garbage collected
+- Build quickly
+- *Productive* and *readable*, avoid mandatory keywords and repetition
+- Tooling not required, but supported well
+- Support networking and multiprocessing
+- Remote package management
+- Avoid "magic code"
+
+: Shared motivation, dislike of C++'s complexity. Can have a C-compatible language without the confusion
+
+* Some unique things
+- Built-in concurrency primitives
+- Composition over inheritance
+- Pointers, but no pointer arithmatic
+- Unique handling of packages and dependencies
+- Statically linked native binaries (no external dependencies)
+
+* Why Go?
+
+It's hip. It's hot. It's happening.
+All the cool kids are doing it.
+Pokémon Go may have been written in Go.
+
+.image intro/img/pokemon.jpg 400 _
+
+* Go is opinionated
+
+It is _not_ object oriented, but it may feel like it.
+
+Expect some uncomfortable (but readable) syntax. 
+
+Some common features (ex: generics, inheritance) in object-oriented languages are omitted to promote simplicity.
+
+Some features are omitted or modified to prevent particular behaviors (ex: maps, asserts, exceptions)
+
+
+* Hello Go!
+
+Code along: 
+.link https://play.golang.org/
+
+.play -numbers intro/code/samples/hello_world.go
+
+* Variables
+
+.play intro/code/samples/types.go /START OMIT/,/END OMIT/
+
+* Shorthand
+
+.play -numbers intro/code/samples/type_assert.go
+
+* What's Your Type
+
+.play -numbers intro/code/samples/define_types.go
+
+* Types
+
+What do you think? Does this work?
+
+	type Foo int
+	type Bar Foo
+
+	var b Bar
+	i := 1
+	b = Bar(i)
+
+How about this?
+
+	var i int64 = 1
+	var j int
+	j = i
+
+* Time for some inSTRUCTion
+
+Structs =/= Objects
+
+Structs == simple DTOs (sort of)
+
+A way of expressing groups of data
+
+* Structs
+
+.play intro/code/samples/structs.go
+
+* Structs
+
+.play intro/code/samples/structs_extra.go
+
+* Struct Casting
+
+.play -numbers intro/code/samples/structs_typing.go
+
+* Struct Embedding
+
+.play -numbers intro/code/samples/structs_embed.go
+
+* You don't understand structs
+
+.play -numbers intro/code/samples/structs_embed_wrong.go
+
+* Sanity Check
+
+Does this work?
+
+	type Data struct { datas int }
+	type Datum struct { datas int }
+	ds := Data{42}
+	var d Datum = Datum(ds)
+
+
+How about this?
+
+	type Kipp struct {
+		Whip int
+		Flip float32
+		Trip string
+	}
+
+	k := Kipp{ 12, 3.14 }
+
+* Structs Review
+
+Are NOT objects. They are data.
+
+Embedding =/= inheritance. It is more akin to a "has-a" relationship.
+
+Embedded struct's fields are PROMOTED to the embedding struct.
+
+* Arrays and Slices
+
+For all your sequences of typed data.
+
+Slices are like arrays but cooler.
+
+* Arrays
+
+.play -numbers intro/code/samples/arrays.go
+
+* Array Assignment
+
+.play -numbers intro/code/samples/arrays_assign.go
+
+* Array Iteration
+
+.play -numbers intro/code/samples/arrays_iter.go
+
+* Slices
+
+.play -numbers intro/code/samples/slices.go
+
+* Slicing
+
+.play -numbers intro/code/samples/slices_array_slice.go
+
+* Slice Append
+
+.play -numbers intro/code/samples/slices_append.go
+
+* Arrays and Slices Recap
+
+Arrays are cool, slices are cooler. Use them to store your lists of things.
+
+Arrays have static length.
+	
+	list := [3]string{"Cersei", "Polliver", "The Hound"}
+
+Slices are more flexible (and are widely used).
+	
+	slice := []int{1, 2}
+	slice = append(slice, 3, 4)
+
+Can "slice" an existing array/slice to get a slice.
+	
+	slice := arr[1:3]
+
+* FUNctions
+
+Reusing code has always been a good thing.
+
+Go adds a little extra flavor to conventional functions.
+
+Multiple returns.
+
+Receivers.
+
+No pass by reference.
+
+Wow
+
+* Functions
+
+.play intro/code/samples/functions.go
+
+* Function Multi-return
+
+.play intro/code/samples/functions_multi.go
+
+* Functions Multi-return
+
+.play -numbers intro/code/samples/functions_cont.go
+
+* Receivers
+
+We use receivers to define methods on types. But only "local" types.
+
+A function is a called a method when a receiver argument is added.
+
+Concept: a method is a behavior or transformation of data
+
+* Receivers
+
+.play -numbers intro/code/samples/receiver.go
+
+* Pointer Receivers
+
+.play -numbers intro/code/samples/receiver_ptr.go
+
+* Receivers and embedded types
+
+.play -numbers intro/code/samples/receiver_promote.go
+
+* Receivers... wait, how?
+
+.play -numbers intro/code/samples/receiver_struct.go
+
+* Enter Interfaces
+
+Interfaces _implicitly_ define a set of values that share behaviors.
+
+We often want to treat values not by what they _are_, but what they can _do_.
+
+	// Stringer is implemented by any value that has a String method, which defines the “native” 
+	// format for that value. The String method is used to print values passed as an operand to 
+	// any format that accepts a string or to an unformatted printer such as Print.
+
+	type Stringer interface {
+	        String() string
+	}
+
+* Interfaces
+
+.play -numbers intro/code/samples/interface.go
+
+* time.Weekday
+
+.iframe http://golang.org/pkg/time/#Weekday 600 1000
+
+* io.Writer and fmt.Fprintf
+
+.iframe http://golang.org/pkg/fmt/#Fprintf 200 1000
+
+.iframe http://golang.org/pkg/io/#MultiWriter 200 1000
+
+* Interfaces
+
+.play -numbers intro/code/samples/interfaces_mw.go
+
+* Goroutines
+
+Go is built for concurrency, not for parallelism.
+
+Goroutines are like threads, but really not.
+
+Lightweight (~2KB stack).
+
+User space scheduler.
+
+* Goroutines
+
+.play intro/code/samples/goroutines_simple.go
+
+* Goroutines
+
+.play intro/code/samples/goroutines.go
+
+* Goroutines
+
+*M*: A machine thread, managed by the OS
+*P*: A per-thread context, or processor, for scheduling goroutines
+*G*: A goroutine. Grey == inactive/waiting, Blue == active/running
+
+.image intro/img/goroutine.jpg _ 450
+
+Only "GOMAXPROCS" processes are spawned when run.
+
+* Channels
+
+Channels are a built-in type for helping acheive concurrency.
+
+Allow communication between goroutines. Essentially thread-safe queues.
+
+For synchronization, not sharing (lots of) data.
+
+Can be buffered or unbuffered.
+
+* Channels
+
+.code intro/code/samples/channels.go
+
+* Unbuffered Channels
+
+.image intro/img/unbuffered_channels.png
+
+* Buffered Channels
+
+.image intro/img/buffered_channels.png
+
+* Packages
+
+We know all about packages by now. You can make your own packages.
+Some things never make it out.
+
+.code intro/code/samples/package.go
+
+* Packages
+
+.code intro/code/samples/package_main.go
+
+* Go Tools
+
+Live demo time!
+
+- go build
+- go fmt
+- go test
+- go test -coverprofile
+
+* Go Tools
+
+Other fun tools
+
+- go fuzz: throw a ton of randomness against your program and see what breaks
+- 
+
+TODO: Show some cool tools
